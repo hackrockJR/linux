@@ -1,0 +1,45 @@
+Gestion de procesos en Linux>>
+
+# Comando pidof 
+
+pidof httpd
+pidof nginx
+
+# ps 
+ps -ef | grep -i httpd
+
+o bien 
+
+ps aux | grep httpd
+
+# matar el proceso 
+
+kill
+
+# Matar todos los procesos y sus hijos> 
+
+kill -9 
+
+# Matar procesos asociado a un nombre 
+
+killall 
+
+# matar un proceso en especifico
+
+pkill 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
