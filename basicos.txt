@@ -1,1 +1,10 @@
-
+cd 
+cp 
+mkdir
+ls
+pwd 
+rm 
+cat 
+vi
+grep
+| 
