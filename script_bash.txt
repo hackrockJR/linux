@@ -1,0 +1,13 @@
+cd $HOME && touch script.sh && chmod +x script.sh
+cd $HOME && echo '#!/bin/bash' > script.sh && echo '# -*- ENCODING: UTF-8 -*-' >> script.sh
+
+script.sh
+#!/bin/bash
+# -*- ENCODING: UTF-8 -*-
+echo "<° Bienvenido usuario"
+exit
+
+ejecutar en la ruta HOME
+
+./script.sh
+
