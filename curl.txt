@@ -1,0 +1,83 @@
+# El comando Curl se usa para transferir archivos desde un servidor, es compatible con varios protocolos como HTTP, HTTPS, FTP, FTPS,
+IMAP, IMAPS, DICT, ARCHIVO, GOPHER, LDAP, LDAPS, POP3, POP3S, RTMP, RTSP, SCP, SFTP, SMB, SMBS, SMTP, SMTPS, TELNET y TFTP, etc.
+
+# Comando curl
+
+curl http://hackrock.com
+ 
+# Redireccionar salida en un txt
+
+curl http://hackrock.com -o test.html
+curl http://hackrock.com > test.html
+
+Descargar varios archivos
+
+curl -O http://hackrock_part1 -O http://hackrock_part2
+
+Entrar a un ftp
+
+curl ftp://hackrockftp -user user username:password
+
+para descargar un archivo del ftp
+
+curl ftp://hackrockftp -user user username:password -o archivo.tar.gz
+
+para cargar un archivo del ftp 
+
+curl -T archivo2.tar.gz ftp://hackrockftp/test-directory/ -user user username:password 
+
+ctrl+c pausa la descarga
+
+# Renaudar la descarga
+
+curl -C – -O http://hackrock/archivo2.tar.gz
+
+# Enviar correo
+
+curl –url “smtps://smtphackrock:465” –ssl-reqd –mail-from “jr@hackrock.com” 
+–mail-rcpt “jr@hotmail.com” –upload-file archivo1.txt –user “jr@hackrock.com:contraseña” –insecure
+
+# Limitar la velocidad de descarga
+
+curl –limit-rate 200k -O http://hackrock.com/archivo.tar.gz
+
+# Mostrar solo títulos
+
+curl -I http://hackrock.com/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
