@@ -1,0 +1,44 @@
+Comando uname
+
+El comando uname proviene de la abreviatura en ingles UNIX Name. se trata
+de una herramienta cuyo objetivo es mostrar informacion del sistema operativo
+como la version del mismo , la version del kernel y detalles del equipo entre 
+otras cosas mas. La sintaxis del comando UNAME es muy simple. Sencillamente 
+desde la terminal teclearemos >
+
+uname -parametro
+
+Parametros>
+
+para mostrar todas las opciones que nos brinda la herramienta UNAME utilizaremos
+el parametro help
+
+uname --help
+
+con el parametro -a mostrara toda la informacion (kernel, sistema opertivo,..)
+
+uname -a 
+
+con el parametro -s nos mostrara el kernel con el que estamos trabajando 
+
+uname -s 
+
+con el parametro -r nos mostrara la version dl kernel
+
+uname -r 
+
+con el parametro -v nos mostrara la version del sistema operativo
+
+uname -v
+
+con el parametro -o nos mostrara el nombre del sistema
+
+uname -o 
+
+con el parametro m nos mostrara el nombre del host
+
+uname -n 
+
+con el parametro -m nos mostrara la arquitectura con la que estamos trabajando
+
+uname -m
