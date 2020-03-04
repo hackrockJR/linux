@@ -1,0 +1,5 @@
+
+
+zless smtp-2019-09-13.log.gz | grep "juanperez@dominio.com" > /tmp/logs.txt
+
+descargar archivo por scp con el software de winscp
