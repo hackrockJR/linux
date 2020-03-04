@@ -1,0 +1,18 @@
+1- Descargar virtualbox 
+
+de virtualbox.org
+
+2- Seleccionar el paquete de instalacion: 
+
+Ubuntu 16.10 AMD64
+
+3- Instalar por comandos:
+
+Entrar a la carpeta de descarga
+
+dpkg -i virtualbox........
+
+
+o 
+
+apt-get install virtualbox
