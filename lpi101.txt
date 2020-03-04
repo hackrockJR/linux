@@ -1,0 +1,200 @@
+mtime modified time --> opcion que permite conocer los archivos que han sido modificados en cierto periodo de dias 
+
+base a dias 
+
+find /etc -type f -name "*.conf" -mtime -1
+find /etc -type f -name "*.conf" -mtime +1
+
+si en base a minutos
+
+
+echo test >> resolv.conf
+find /etc -type f -name "*.conf" -mmin -1
+find /etc -type f -name "*.conf" -mmin +1
+find /etc -type f -name "*.conf" -mmin 1
+
+find /etc -type f -name "*.conf" -mmin -1 -mmnin -10
+
+
+----------------------------------------------------------------------------
+
+xargs // Mejora los procesos en la busqueda de archivos
+
+
+find /etc -type f -name "*.conf" | xargs -P 5 -I  {} cp {} /tmp
+
+Para ejecuciones de comandos en base a los resultados del xargs. 
+Las ventajas de xargs:
+*) Se puede definir cantidad de procesos para finalizacion de la tarea, opcion -P, lo que mejora los tiempos 
+de ejecucion.
+*) Se puede definir cantidad de argumentos trasladados al xargs, opcion n 
+*) I es el identificado del resultado de la busqueda {} se almacena en {} /// Se puede sustituir con el nombre de una variable
+
+---------------------------------------------------------------------
+
+Buscar en base a nivel de directorio 
+
+find /etc -maxdepth 1 -type f -name "*.conf"
+
+cp -a // respeta los permisos originales
+
+-maxdepth buscar objetos en el filesystem solo en el primer directorio 
+	En el ejemplo, solo buscar en /etc/
+
+find /var/tmp -size +1GB -size -5G  | xargs -I {} rm -rf {}
+find /var/tmp -size +1GB -size -5GB 
+
+
+----------------------------------------------------------------------------------------------
+
+du --->disk usage
+
+du -h /var 
+
+muestra el tamaño de los objetos contenidos en el directorio 
+
+-h  --> muestra el tama;o en formato legible (MB,GB,TB)
+
+du -chd 1 /
+
+-d --> opcion de maxdepth, se le indica a cuantos de directorios se debe calcular el tam;o 
+
+du -chd 1 --exclude="/proc" / 
+
+--exclude --> excluir directorios 
+
+se puede combinar con opcion de sort , para listar de mayor a menos o viceversa
+
+du -chd 1 --exclude="/proc" / | sort -h
+
+sort --> ordena los registros de menor a mayor o vicecersa la opcopn -h para que odene las entradas en base 
+	MB, TB, GB
+
+
+------------------------------------------------------------------------------------------------------
+
+split --> partir archivos por cantiad de lineas o por tama;os 
+
+tar zcvf /tmp/backup_$(date +%F)_etc.tgz /etc
+
+backup_2016-11-02 
+
+
+z --> zip 
+c --> create 
+v --> verbose (avance en pantalla)
+f --> nombre del archivo 
+
+
+cd /tmp 
+
+split -d -b 1M /tmp/backup_2016-11-28_etc.tgz backup_2016-11-28_etc_part_
+
+ll -h backup_2016
+
+-d --> que utilice sufijos numericos (01..02..03..04)
+-b --> tama;o de unidades partidas
+
+
+cat backup_2016-11-28_etc_part _*>> resultado_backup_etc.tgz
+
+
+x -->extract 
+
+Luego listar carpeta etc extraida en /tmp
+
+ll -d etc/
+
+
+Para generar de una sola vez las unidades partidas, sin tener el tar original:
+
+tar cvz /etc | split -d -b 1M - new_backup_2016-11-28_etc_part_
+
+
+-----------------------------------------------------------------------------------
+
+grep ---> para bsuqueda de texto en archivos 
+sed --> busqueda y reemplazos
+awk ---> para manipulacion de archivos y datos tabulados.
+
+En las practicas vamos hacer las expresiones regulares
+
+
+Carpeta de trabajo: 
+ /root/Desktop/utils_linuxlpi/Text
+
+Para los ejercicios de grep, ubicarse en el directorio :
+
+cd  /root/Desktop/utils_linuxlpi/Text/demo/grep-examples
+
+
+para awk 
+
+visto en clases.
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------
+
+
+Literal
+
+Metacaracteres: Son los caracteres especiales que tiene un significado mas alla del que en si representan.
+
+*.xtx
+
+el asteristico es un metacaracter, indica la ocurrencia de cero o mas veces de un caracter
+
+
+Ejemplo
+
+^ ---> Inicio de linea 
+$ ---> FIn de linea 
+
+*) cadena objetivo: Se define como el patron de todas las ocurrencias a encontrar en un texto 
+
+Por ejemplo: 
+
+EN encontrar todas las cadenas de texto que contengam  "windows" siendo la w mayuscula o minuscula, y que despues de sigia un caracter numerico:
+
+Expresion de busqueda:
+
+[Ww]indo[Ww]s[0-9] 
+
+
+[] --> metacarter que indica la posibilidad de ocurrencia de varios caracteres para una posicion especifica.
+
+*) Secuencia de escape .
+
+	grep "\*"file.txt
+
+	la diagonal inversa "\" es la secuencia de escape  que quita el significado de metacaracter y lo vuelve un 
+	caracter normal
+
+grep "\[\*"file.txt 
+
+grep "\\"file.txt
+
+
+vi fechas.txt
+
+
+1234-11-12
+2005-67-12
+2005-67-12
+1999-10-10
+2011-07-04
+2002-03-31
+
+grep -E "^(19|20)[0-9][0-9]-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$" fechas.txt
+
+Resultado: 
+
+1999-10-10
+2011-07-04
+2002-03-31
