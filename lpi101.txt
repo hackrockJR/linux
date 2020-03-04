@@ -1,0 +1,1168 @@
+LINUX LPI 101
+
+
+Historia Reciente de Linux y GNU 
+---------------------------------------------------------------------------
+
+El origen de linux esta basado en el sistema operativo UNIX, 1970
+
+UNIX sistema operativo muy costoso de adquirir y orientado mas que todo a hardware especializado.
+
+1980 ---> Se fundo Free Software Foundation --> Richard Stallman.
+
+	compilador
+	herramientas adicionales (shell, comandos basicos)
+	programas de interaccion usuario final.
+
+
+1991 --> Linus Torvalds --> Basando en el sistema operativo MINIX crea la version 0.1 de kernel linux.
+MINIX (Unix limitado desarrollado para propositos estudiantiles)
+MINIX --> Andrew Tanenbaum.
+
+Linux se licencio bajo licenciamiento GPL (GNU Public License).
+
+GPL consta de 4 libertades:
+
+Libertad 0. La capacidad de usar un software/programa para cualquier 		    proposito.
+
+Libertad 1. La capacidad de poder estudiar de como funciona el software/programa.
+	Precondicion: Es necesario obtener el codigo fuente del programa
+
+Libertad 2. La capacidad de poder distribuir el sw/programa a terceros
+
+Libertad 3. La capacidad de poder hacer mejoras al programa y liberar el 	     programa con dichas mejoras a la comunidad.
+	    Precondicion: Es necesario obtener el codigo fuente del programa
+		
+	   El sw con las modificaciones tambien se licencia en GPL
+
+Lo anterior se conoce copyleft.
+
+---------------------------------------------------------------------
+Instalación de Linux
+---------------------------------------------------------------------
+
+BIOS ---> Basic Input/OutPut System
+UEFI ---> Unified Extensible Firware Interface
+
+BIOS --> Basic Input/OutPut System
+
+1983 --> fue concebido para equipos IBM se adopto como standard.
+
+1) Chequeo de hardware 
+2) Eleccion de dispositivo de almacenamiento para arrancar OS.
+	Seleccionado: Disco Duro 1
+
+3) Disco Duro seleccionado.
+	Se lee el sector MBR (Master Boot Record), son los primeros 512bytes
+
+	512bytes se encuentran:
+	Tabla de particiones creadas --> 4 particiones primarias
+	se selecciona la particion con flag de booteo
+
+4) se ejecuta el gestor de arranque que sabe donde ubicar las particiones con sistema operativo.
+
+Limitantes de Discos de tipo MBR --> tamano maximo de disco es 2TB
+
+--------------------------------------------------------------------------
+UEFI ---> Unified Extensible Firware Interface
+
+El desarrollo de las especificaciones de uefi iniciaron en 1998, por parte
+de Intel, cuando el lanzamiento de los procesadores Itanium. Solamente de uso interno
+
+En el 2002, Intel libera las especificaciones nombrandolas EFI (Extensible Firware Interface)
+
+En 2005, se crea el foro UEFI y crea las especificaciones como standard para UEFI (Unified Extensible Firware Interface) 
+
+foro UEFI --> foro conformado por principales desarrolladores de hardware y software. Intel, AMD, Apple, HP, IBM, DELL, etc
+
+UEFI puede considerar como minisistema operativo.
+
+
+UEFI entiende sistemas operativos, entiende particiones de disco, y entiende
+filesystems.
+
+UEFI trabaja con discos tipo GPT, para discos mayores a 2TB, se pueden crear
+128 particiones y llegando a ocupar un espacio total en disco de 8ZB (8 mil millones de terabytes). 
+
+UEFI configuracion de una particion especial ESP (EFI System Partition).
+	*) Debe ser en filesystem FAT12,FAT16,FAT32, con un tamano 		   recomendado de 500M
+	
+	En sistema operativo linux, esa particion esta ubicada en 
+	/boot/efi
+
+Capacidad de gestionar cambios en secuencia de arranque desde nivel de sistema operativo.
+
+---------------------------------------------------------------
+
+Revisar el tipo de discos a utilizar, mas que todo, si van estar en arreglo de disco a nivel de hardware, ya que podria necesitarse algun driver especial del fabricante.
+
+Nota: Ver opciones para cargar drivers manana (martes 22 nov)
+--------------------------------------------------------------------
+
+Esquema de particiones a crear:
+
+Ventajas:
+Rendimiento
+Seguridad. 
+
+	/tmp ---> particion con permisos completos para usuarios normales.
+		dejar en particion aparte.
+
+	/boot --> permiso de solo lectura, ya que contiene las imagenes de 		          los kernels.
+
+Mantenimiento. 
+		Tareas de respaldo.
+
+
+Esquema de particionamiento:
+
+	/boot --> Imagenes de versiones de kernel que el OS tiene disponible 			  para arrancar. Recomendable dejar particion aparte.
+
+	      	  /boot --> 500M 
+
+	Memoria Virtual . Swap
+
+	Si el equipo tiene en memoria RAM:
+	< 2GB    ---> 3 veces el valor de la memoria RAM
+	mayor a 2GB y menor/igual a 8GB ---> 2 veces el valor ...
+	mayor a 8GB y menor/igual a 64 GB ----> 1.5 veces el valor ....
+	mayor a 64GB  ----> al menos dejar 4GB swap
+
+	Memoria RAM: 2GB
+	Particion de swap ---> 	4GB	
+		 
+	/boot/efi ---> 500M ---> si el equipo es basado en uefi.
+
+	/  ---> particion donde se encuentra todos los recursos del OS.
+	   
+		/ ---> 10GB
+		
+		Si hay abundancia de recursos:
+			/ ---> 50GB
+
+	/tmp ---> 10GB 
+
+	
+A partir de aca, las particiones se crean dependiendo de la funcion que tendra el servidor, si es servidor de red (router), dns/dhcp, file server, bda, correo electronico, web:
+
+Si es un servidor dedicado a file server (samba):
+	/home ---> define el espacio restante para la instalacion
+
+Si es un servidor dedicado a web server (apache, apache-tomcat, jetty):
+	/var ---> define el espacio restante para la instalacion
+	/var/www
+
+
+
+----------------------------------------------------------------------------
+Usando el Shell (Línea de Comando)
+----------------------------------------------------------------------------
+
+Expresiones Regulares en shell linux
+
+
+Aplicaciones ---> Kernel ---> Computer Hardware
+
+
+Instruccion de usuario --> shell (consola) ---> Kernel ---> Computer Hardware
+
+date 	----> /bin/bash ----> kernel de linux ---> Computer Hardware
+						   (lenguaje binario) 
+
+ 
+
+Metodos de configuracion del shell.
+	*) Variables de entorno
+	*) Archivos especiales de usuario y a nivel global
+	*) Alias
+
+
+*) Variables de entorno.
+
+	Es una definicion que almacena un valor para ser utilizado en el OS, 		o por aplicaciones en su funcionamiento.
+
+Para ver las variables de entorno configuradas en el OS:
+	ejecutar:
+	env
+
+Para crear una variable de entorno:
+	FECHA="Lunes 21 de Noviembre de 2016"
+
+Para verificar el contenido de una variable en especifico:
+	echo $FECHA
+
+Para definir una variable de manera global:
+	export FECHA="Lunes 21 de Noviembre de 2016"
+
+	Verificar:
+	env
+
+
+export ---> define una variable con caracter global, es decir, que esa variable sera conocida en todos los procesos y subshells que se creen del shell principal
+
+
+	Para almacenar el contenido/resultado de la ejecucion de un comando, se define de la siguiente forma:
+
+	export FECHA=$(date)
+
+	tambien es aceptable de la forma:
+	export FECHA=`date`
+
+	El procedimiento anterior se conoce como metodo de sustitucion.
+
+	export FECHA01="Hoy es $(date)"
+
+
+
+Modificar variables ya existentes, por ejemplo variable path:
+
+	PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin
+
+	Contiene los directorios en los cuales se encuentras los comandos del sistema operativo.
+
+	Para conocer la ruta absoluta de la ubicacion de un comando, ejecutar comando:
+		which nombre_comando
+		
+		Ejemplo:
+		which date
+
+	Sacar respaldo del contenido de una variable
+	export PATH_BACKUP=$PATH
+
+	Modificar variable:
+	export PATH=$PATH:/opt/app02/bin:/var/app03/sbin
+
+----------------------------------------------------------------
+Clase 02. Martes 22 de Noviembre 2016.
+----------------------------------------------------------------
+
+Segundo metodo de personalizacion del shell:
+
+2) Utilizando archivos especiales de usuario y a nivel global.
+
+Archivos especiales de usuario:
+
+	*) Login
+		estan ubicados en el home directory de cada user.
+		Son archivos ocultos.
+
+		.bash_profile
+		.bash_login
+	
+		.profile
+
+	*) Logout
+		estan ubicados en el home directory de cada user.
+		Son archivos ocultos.
+
+		.bash_logout
+
+	*) Para shell no interactivos
+	
+		.bashrc
+
+	pwd ---> comando que muestra el directorio actual 
+	ls -a --> para mostrar archivos ocultos en un directorio
+
+	cd /home/guest
+	ls -a
+
+	Para hacer la prueba de que se apliquen los archivos de login:
+
+	su - guest
+
+	-  --> indica que el shell con el que se accessara el usuario guest, 			es de login
+	
+		Este es un shell interactivo y de login
+
+	-------------------------
+
+	su guest
+	Este es un shell interactivo pero no de login
+
+
+-----------------------------------------------
+	*) Para shell no interactivos y de no login
+
+		.bashrc
+
+	Ejemplo de shell no interactivo, no es un shell en el cual un admin
+	pueda digitar comandos.
+
+	su - guest -c "ls /tmp"
+	ssh root@10.105.3.139 "ls /tmp"
+	su guest -c "ls /tmp"
+
+	vi .bashrc
+
+--------------------------------------------------------
+
+	*) Logout 
+		vi .bash_logout
+
+		Adicionar:
+		touch /tmp/prueba_logout.txt
+	
+
+--------------------------------------------------------
+
+	Para adicionar la hora y fecha de la ejecucion de los comandos en history:
+
+	export HISTTIMEFORMAT=" %F %T "
+	history
+	
+	unset HISTTIMEFORMAT
+
+	%F ----> fecha en formato dia/mes/annio
+	%T ---> hora en HH:MM:SS
+
+	para aumentar la cantidad de comandos almacenados en el history:
+	export HISTSIZE="5000"
+
+Para eliminar el history por completo, para el usuario root....
+
+	history -c
+	/root/.bash_history
+
+	para el usuario guest
+	su - guest
+	history -c
+	rm /home/guest/.bash_history
+	logout
+
+--------------------------------------------------------------------
+	*) Archivos especiales a nivel global
+
+		Login
+		
+		Los archivos son:
+		/etc/profile
+
+		y para configuraciones por parte del admin, se ha definido
+		/etc/profile.d/
+
+	Ejemplo, agregar un cambio que aplique para todos los usuarios:
+
+	Configurar la variable JAVA_HOME y la variable HISTTIMEFORMAT
+
+	
+	cd /etc/profile.d
+	vi custom_vars.sh
+
+	En el archivo adicionar:
+	export JAVA_HOME="/usr/java/jdk1.8_13/"
+	export HISTTIMEFORMAT=" %F %T "
+
+	Para validar:
+	su - guest
+	echo $JAVA_HOME
+	history
+
+-----------------------------------------------------------------------
+
+	Archivo especial global es para shell no de login no interactivo
+	/etc/bashrc
+
+--------------------------------------------------------------------------
+	Metodo de configuracion del shell:
+
+	*) Alias
+
+	service tomcat stop
+	service httpd stop
+	service tomcat start
+	service httpd start
+
+alias restart_all='service tomcat stop ; service httpd stop ; service tomcat start ; service httpd start'
+
+restart_all
+
+Alias
+definicion que funciona como acceso directo para simplificar la ejecucion de comandos extensos o tener otra forma de llamar comandos.
+
+alias fecha='date'
+alias date='date +%F'
+
+Para dejar permanentes los alias, se guardan en el archivo .bashrc
+
+Para ver los alias ya configurados
+alias
+
+Para deshacer un alias
+unalias nombre_alias
+
+Ejemplo:
+	unalias rm
+
+
+
+
+----------------------------------------------------------------------
+
+Parentesis ----> (Uso principal de VI)
+
+El editor de texto vi tiene tres modos de ejecucion:
+*) Modo comando. Con el cual se pasan instrucciones sobre el contenido del archivo. Acciones como cortar, copiar, borrar, buscar, etc.
+
+*) Modo insercion. Con el cual modificamos el contenido del archivo.
+
+*) Modo comando de ultima linea. Accesamos a este modo, presionando : , estando en modo comando. Ofreces acciones adicionales y de apoyo al modo comando.
+
+	Crear archivo temporal:
+		vi /tmp/test.txt
+
+	
+Acciones principales en modo comando.
+
+	Copiar linea:
+		Shift + y ---> Copiar
+		p    -------> pegar 
+
+	Para ir a la ultima linea del archivo:
+		Shift + g
+
+	Para ir a la primera linea:
+		gg
+
+Acciones en modo comando de ultima linea:
+
+	para ir a un linea especifica:
+
+	:<numero de linea>	
+	Ejemplo:
+	:6
+
+	Para colocar correlativo de linea en el contenido del texto:
+	:set number
+
+	Buscar y reemplazar una cadena de texto
+	:1,3s/Noviembre/Diciembre/
+
+	Para hacer todos los reemplazos de las ocurrencias en una linea
+	:1,3s/Noviembre/Diciembre/g
+
+	Busqueda y reemplazo en el archivo completo:
+	:%s/2016/2017/g
+
+	Para invocar un comando, y el resultado adicionarlo al archivo:
+
+	:read !<comando>
+
+	:read !df -h
+	:read !date
+
+	Para visualizar el resultado de la ejecucion de un comando, sin 	colocar el contenido en el archivo:
+	:!<comando>
+
+	:!date
+
+	Para borrar una linea(s), en modo comando:
+	dd
+	
+	Para borrar una cantidad de lineas especificas, en modo comando:
+	<numero de linea a borrar>dd
+
+	Ejemplo:
+	8dd
+
+	Para realizar Undo de los cambios
+	u
+
+	Para rehacer los cambios:
+	ctrl + r
+
+	Para copiar una cantidad de lineas especificas:
+	<numero de linea a borrar> + shift + y
+
+	y luego pegar:
+	p
+
+	En modo comando, para ir a inicio de linea:
+	^
+
+	Para ir a fin de linea:
+	$
+
+	Para guardar los cambios, en modo comando ultima linea
+	:w 
+	
+	Para guardar los cambios y salir:
+	:wq
+	
+--------------------------------------------------------------------------
+INSTALACION DE SOFTWARE 
+---------------------------------------------------------------------------
+
+Para la instalacion de paquetes/programas tenes dos opciones:
+	1) Paquetes RPM
+	2) paquetes en formato de codigo fuente
+
+
+1) RPM
+
+RPM -->	RPM Package Manager
+Gestor de paquetes para llevar un control de las versiones de programas instalados en el OS y garantizar la integridad de su funcionamiento.
+
+Cuando hablamos de rpm, nos referimos:
+	*) Archivo con extension rpm.
+	*) Base de datos de rpm
+	*) Utilitaria/comando para las tareas de gestios (rpm)
+
+	ls /root/Desktop
+
+
+	Instalacion de paquetes rpm:
+	rpm -ivh /root/Desktop/webmin-1.820-1.noarch.rpm
+
+	i ---> instalacion
+	v ---> verbose (Avance en pantalla del proceso de instalacion)
+	h ---> barra de progreso
+
+	Dependency Hell 
+
+	Opciones de consulta principales desde rpm:
+
+	Listado de rpms instalados en el OS:
+	rpm -qa 
+
+	q ---> query
+	a ---> all packages
+
+	rpm -qa <nombre_paquete>
+	rpm -qa webmin
+
+	Informacion acerca de paquete rpm:
+	rpm -qi webmin
+
+	i --> information
+
+	Listar archivos instalados por rpm.
+	rpm -ql webmin
+
+	l --> list files
+
+	Para saber que rpm instalo un archivo/directorio
+	rpm -qf <nombre_archivo>
+	rpm -qf /etc/ssh/sshd_config 
+
+	rpm -qc webmin
+	c --> les muestra los archivos de configuracion de ese paquete
+
+	Ejemplo:
+		rpm -qc openssh-server
+		rpm -qc webmin
+
+	Para saber los archivos/dirs de documentacion
+		rpm -qd  openssh-server
+
+	Para identificar las dependencias necesarias para instalar un rpm:
+	rpm -qR openssh-server
+	rpm -qR webmin
+
+	Para eliminar un rpm:
+	rpm -e webmin
+	-e ---> erase
+
+	Para actualizar un paquete:
+	rpm -Uvh /root/Desktop/webmin-1.820-1.noarch.rpm
+
+	U ---> update
+
+	Base de datos de rpm, ubicada en el dir: /var/lib/rpm
+	ls /var/lib/rpm
+
+	Para reparar la base de datos rpm, ejecutar el comando:
+	rpm --rebuilddb
+
+
+	Gestores de paquetes para RPM:
+	
+	yum --> Yellow Dog Updater Modified
+
+	Este gestor de paquetes rpm, esta basado en el esquema de     		mantenimiento de paquetes basados en repositorios.
+	Repositorios --> ubicacion donde se encuentran los rpms necesarios 		                 dependiendo su orientacion.
+			Repositorios pueden ser:
+			Locales
+			Remotos (http(s),ftp)
+
+	Configuracion de Repositorios:
+	
+	*) Crear la definicion de nuestro repositorio, se hace en la ruta:
+		/etc/yum.repos.d
+		
+	Accesar a ruta:
+		cd /etc/yum.repos.d
+	
+	Crear archivo, ejemplo para crear repositorio local:
+		vi rhel7_dvd.repo
+
+	En el contenido:
+		[rhel7_dvd]
+		name=Repositorio Local de DVD RHEL 7
+		enabled=1
+		baseurl=file:///mnt/iso
+		gpgcheck=0
+
+	URI --> Uniform Resource Identifier:
+	baseurl=http://ip-addr/repo
+
+	http://
+	ftp://
+	file://
+
+	Montar el DVD de redhat en el directorio /mnt/iso
+	mkdir /mnt/iso
+	mount /dev/sr0 /mnt/iso
+
+
+	Para indicar que sean los cambios o adicion de repositorios, ejecutar:
+	yum repolist
+	
+
+	Instalar paquetes:
+	yum install telnet
+
+	yum -y install perl-core
+
+	-y --> Para confirmar de una vez la instalacion de los paquetes
+
+	Para ver el historial de instalaciones con yum
+	yum history list
+
+	Para deshacer los cambios, de una instalacion especifica:
+	yum history undo <id>
+	yum history undo 3
+
+	-----------------------------
+
+	informacion de un paquete:
+	yum info openssh-server
+
+	buscar si existe un rpm en los repositorios:
+	yum search <nombre_paquete>
+	yum search ftp
+
+	Listar dependencias necesarios para instalar un OS:	
+	yum deplist perl-core
+	
+	identificar que rpm instalo un archivo/direc
+	yum whatprovides /bin/top
+
+	Para ver listado disponibles de rpms:
+	yum list
+
+	Descargar solamente los rpms, no instalarlos:
+mkdir /opt/mariadb
+yum -y install perl-core --downloadonly --downloaddir=/opt/mariadb
+
+
+
+	Crear archivo en /etc/yum.repos.d, :
+	
+	vi rhel7_http.repo
+
+	Contenido:
+	[rhel7_http]
+	name=Repositorio HTTP de DVD RHEL 7
+	enabled=1
+	baseurl=http://10.105.2.60/repo
+	gpgcheck=0
+
+	
+	Para deshabilitar repositorio:
+	yum-config-manager --disable rhel7_dvd
+
+	Ejecutar
+yum -y install perl-core --downloadonly --downloaddir=/opt/mariadb
+	
+
+	Crear un repositorio:
+
+	1) Crear archivo en /etc/yum.repos.d, :
+	
+	vi perlcore_local.repo
+
+	Contenido:
+	[perlcore_local]
+	name=Repositorio con rpms de perl-core
+	enabled=1
+	baseurl=file:///opt/mariadb
+	gpgcheck=0
+
+	
+	2) inicializar el directorio /opt/mariadb como repositorio para yum
+	
+
+	yum-config-manager --disable perlcore_local
+	yum install -y createrepo
+
+	createrepo /opt/mariadb
+	yum-config-manager --enable perlcore_local
+	yum repolist
+
+	Vamos a instalar el paquete perl-core desde repo perlcore_local
+	yum-config-manager --disable rhel7_http
+	yum repolist
+	yum install perl-core
+
+	Actualizar contenido de repositorio.
+	
+cp /root/Desktop/webmin-1.820-1.noarch.rpm /opt/mariadb
+createrepo --update /opt/mariadb
+yum clean all     ----> este comando limpia el cache de la config de los repos
+			y fuerza la actualizacion de la informacion.
+yum repolist
+
+yum install webmin
+
+
+	Habilitando el cache en yum:
+	Esta configuracion habilita la descarga de los rpms por cada accion
+	de instalacion.
+
+	Para habilitarlo esa opcion:
+	
+	vi /etc/yum.repos.d/rhel7_http.repo
+
+	Editar el archivo, y adicionar la linea:
+	keepcache=1
+
+	guardamos los cambios.
+
+	
+	Inicializar el cache de yum:
+	yum makecache
+	yum install nmap
+
+	El contenido de los rpms descargados se encuentra en la ruta:
+	/var/cache/yum
+
+	Para efectos de la practica los rpms deben estar ubicados en:
+        /var/cache/yum/x86_64/7Server/rhel7_http/packages
+
+
+Para habilitar repositorios especificos, al momento de ejecutar yum:
+
+yum --disablerepo="*" --enablerepo="rhel7_http" install ftp
+
+
+disablerepos ---> deshabilita el repositorio, con el valor "*" se 			  deshabilitan todos.
+
+enablerepos ---> habilita repos especificos
+
+	
+	para la prueba del comando.
+	yum-config-manager --enable rhel7_dvd
+	
+	Montar imagen de DVD de instalacion que ocupamos para el repo local:
+	mount /dev/sr0 /mnt/iso
+
+	Luego instalar un paquete y verificar que el repositorio seleccionado
+	sea rhel7_http:
+	yum --disablerepo="*" --enablerepo="rhel7_http" install php
+
+
+	Descargar de manera completa el contenido de un repositorio:
+	
+	mkdir /opt/full_rhel7
+        reposync -p /opt/full_rhel7 --repoid=rhel7_http 
+
+	-p ---> dir para almacenar la descarga
+	--repoid --> repositorio objetivo
+
+
+	reposync -p /opt/full_rhel7 --repoid=rhel7_http -n
+
+	-n --> descargar solamente los rpms mas recientes.
+
+
+-------------------------------------------------------------------
+
+Instalacion de software mediante codigo fuente:
+
+Ventajas de software en codigo fuente:
+*) Como programador puedo saber el contenido de como funciona programa.
+*) Adecuarlo a la version de linux que yo ocupe.
+*) Las actualizaciones/mejores se liberan primero en codigo fuente.
+
+	Para la practica:
+	cd /root/Desktop/
+
+	Debe existir un archivo llamado nagios-plugins-2.1.4.tar.gz.
+
+	1) Extraer el contenido del archivo .tar.gz
+
+		tar zxvf nagios-plugins-2.1.4.tar.gz
+
+		z ---> zip
+		x ---> extract
+		v --> verbose (avance en pantalla)
+		f ---> file
+
+	2) cd tar zxvf nagios-plugins-2.1.4.tar.gz
+		
+		Verificar si el OS tiene todas las dependencias necesarias
+		para hacer el proceso de compilacion.
+
+	 ./configure
+
+
+	3) Compilar:
+
+		Es traducir de un lenguaje de programacion a otro.
+	Codigo fuente, la mayoria de los programas disponible vienen hechos 		en C, C++.
+
+	Para el proceso de compilacion es necesario tener disponible, la 		utileria de gcc (GNU Compiler C)
+
+	Para compilar:
+	make
+	
+	4) Trasladar los binarios resultantes a la ruta de OS:
+
+	La ruta predeterminada para alojar programas instalados mediante 	 codigo fuente es:
+	/usr/local
+
+	Ejecutamos:
+	make install
+
+	para el ejemplo:
+	Se tuvo que haber creado la carpeta /usr/local/nagios
+
+	cd /usr/local/nagios
+	
+
+	Si se requiere eliminar la instalacion de codigo fuente, se elimina
+	o se renombra la carpeta de trabajo:
+
+	Borrar:
+	rm -rf /usr/local/nagios
+
+	Renombrar:
+	mv /usr/local/nagios /usr/local/old_nagios
+
+
+	Si se hace necesario ejecutar otro proceso de compilacion, es necesario limpiar el directorio fuente de resultados de compilaciones anteriores:
+	cd /root/Desktop/nagios-plugins-2.1.4
+	make clean
+
+---------------------------------------------------------------------------
+
+PROCESAMIENTO DE TEXTO.
+
+
+
+	El comando se tiene el formato de:
+	comando opciones argumentos
+
+	rm 	-rf 	/usr/local/nagios
+
+	-r --> recursivo
+	-f --> forzado
+
+	En programa tenemos tres flujos de datos:
+1) Standard Input -> 0 -> teclado -> insumos para que el comando funcione
+2) Standard Output -> 1 -> pantalla -> resultado de la ejecucion del comando.
+3) Standard Error -> 2 ->pantalla -> Errores de la ejecucion del comando.
+
+
+Redireccionares de flujos de datos:
+
+Standard output:
+	ls /tmp > /tmp/stdout.txt
+	ls /tmp/ >> /tmp/stdout.txt
+
+> ---> Comportamiento: si el archivo no existe lo crea y adiciona el 				contenido	
+			si el archivo ya existe lo sobrescribe
+
+>> --> Comportamiento: si el archivo no existe lo crea y adiciona el 				contenido	
+			si el archivo ya existe adiciona el resultado de cada 				ejecucion al final del archivo
+
+
+Standard error: 
+ls /tmp /noexiste 2> /tmp/stderr.txt
+
+ls /tmp /noexiste 2>> /tmp/stderr.txt
+
+
+Para enviar stderr y stdout a un mismo destino:
+	ls /tmp /noexiste &> /tmp/stdfull.txt
+	ls /tmp /noexiste &>> /tmp/stdfull.txt
+
+
+Redireccionador | (pipe):
+
+	comando1 | comando2 | comando3
+
+El standard output de commando1 le sirve como standard input para comando2 y asi sucesivamente.
+ ls /tmp/  | grep vmware | nl | tr 'a-z' 'A-Z'
+
+
+grep --> comando para hacer busquedas de cadenas de texto
+nl --> number line
+tr 'a-z' 'A-Z'  --> convertir de minusculas a mayusculas
+
+Comandos Basicos de filtrado de contenido:
+cat  ---> comando para mostrar el contenido de un archivo en pantalla
+		cat /etc/services
+
+tail 	Muestra las ultimas 10 lineas del archivo, de manera predeterminada.
+	con la opcion -n se indica la cantidad de lineas a mostrar
+
+		tail /etc/services
+		tail -n 25 /etc/services
+
+head 	Muestra las primeras 10 lineas del archivo, de manera predeterminada.
+	con la opcion -n se indica la cantidad de lineas a mostrar
+
+		head /etc/services
+		head -n 25 /etc/services
+
+cut	El uso comun de este comando es cuando se tiene texto de forma 		tabulada, con separador en comun.
+
+		cut -d':' -f2-5 /etc/passwd		
+		cut -d':' -f1,7 /etc/passwd
+	
+		-d --> se le indica el delimitador
+		-f --> campos que se quieren mostrar	
+
+
+tr  	trasladar de un caracter a otro.
+		
+echo ---> Enviar mensaje a pantalla 
+
+		echo "Curso Linux LPI 2016" | tr 'aeiou' '12345'
+		echo "Curso Linux LPI 2016"  | tr 'A-Z' 'a-z'  
+		echo "Curso Linux LPI 2016"  | tr 'A-F' 'a-f'
+
+
+------------------------------------------------------------
+
+grep -c -i "[^aeiou]" "[^aeiou]" "[^aeiou]" "[^aeiou]" "[^aeiou]" "[^aeiou]"  /usr/share/dict/words
+
+
+ejercicio
+
+grep 
+
+ grep -c "y[a-z]*y[a-z]*y" words
+
+-i inicio de linea
+
+Ejercicio 7:
+
+grep -i "^[^aeiou]"\{6\} words 
+
+Ejercicio 8:
+
+grep "^y[a-z]*y$ words 
+
+
+ls -l /etc/ |grep "regex"
+
+archivos/directorios que cumplan 
+
+*) Inicien con c 
+*) Que despues de la c, tenga 4 caracteres 
+*) terminen .conf 
+
+
+ls -1 /etc/ | grep "^c[0-9a-z]"\{4\}.conf$
+
+ ls -1 | grep "^c....\.conf$
+
+
+Ejercicio 9 
+
+grep -c "\<[A-Z]" virgin
+
+
+
+grep "\([xwy]\)\1"
+
+() ---> Localidad de memoria
+
+\1  posicion de la localidad de memoria
+
+grep -c "\([aeiou]\)\1" words
+
+grep "\([a-z])\1\([a-z])\1\1\2" words
+
+2 4 8
+
+13:34:33
+
+grep "\([0-9])"\1
+
+
+
+grep "[0-9]\([0-9]\):\1[0-9]:[0-9]\1" hora.txt
+
+Resultado:
+
+12:29:42
+13:34:33
+14:44:44
+
+
+--------------------------------------------------------
+Ejercicio #2 
+
+cd /root/Desktop/utils_linuxlpi
+
+cat emails.txt
+
+Hacer la expresion regular que encuentren los siguientes emails:
+
+usuario@dominio.com
+
+Para la parte del nombre de usuario aceptan:
+
+*) Al menos 3 caracteres incluyendo letras, numeros
+*) Caracteres especiales permitidos: _.*%-
+
+Para la parte del dominio:
+
+*) Al menos 3 caracteres incluyendo:letras, numeros 
+*) Caracteres especiales permitidos: _- 
+*) debe terminar en un dominio superior de 2 o mas caracteres.
+.com .gob.edu
+
+grep "^[a-zA-z0-9_\.\*\%-]\{3,\}@[a-zA-Z0-9_-]\{3,\}\.[a-zA-Z]{2,3\}$"
+
+
+
+Otro comando de busqueda es el egrep que contiene funciones que permiten hacer pruebas de patrones con varias opciones comportandose como una condicion OR 
+
+egrep "(ssh|ftp|ntfs)" /etc/services 
+
+ 
+
+vi fechas.txt
+
+
+1234-11-12
+2005-67-12
+2005-67-12
+1999-10-10
+2011-07-04
+2002-03-31
+
+grep -E "^(19|20)[0-9][0-9]-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$" fechas.txt
+
+Resultado: 
+
+1999-10-10
+2011-07-04
+2002-03-31
+
+
+
+
+-------------------------------------------------------------
+
+comando sed 
+
+sed --> stream editor 
+comando utilizado para buscar y reemplazar 
+
+sintaxis:
+sed 's/patron_busqueda/patron_reemplazo/'
+
+para los ejemplos ubicarnos en la ruta:
+cd /root/Desktop/utils_linuxlpi/Text/demo/sed-examples
+cat fruit
+
+Notar que solo reemplaza la primera ocurrencia de apple 
+
+para hacer todos los reemplazos en una misma linea, se utiliza la opcion g 
+
+sed 's/apple/plum/g' fruit
+
+Para aplicar mas de una expresion en una misma ejecucion de sed, se utiliza la opcion -e
+
+sed -e 's/apple/plum/g' -e 's/pear/peach/g' fruit
+
+
+----------------------------------------------------------------
+[root@romero sed-examples]# cat fruit
+
+apples apples
+bananas bananas
+lemons limes
+oranges oranges
+pears pears
+
+
+[root@romero sed-examples]# sed 's/\<[aeiou][a-z]*/plums/' fruit
+plums apples
+bananas bananas
+lemons limes
+plums oranges
+pears pears
+
+ejercicio 13 cambiar 
+
+
+sed 's/\<[aeiou][a-z]*/plum/' fruit 
+
+ejecicio 14 cambiar columnas en archivos fuit 
+
+
+Ejercicio 15 
+
+
+Cambiar las frutas  iguales en la misma linea por una sola ocurrencia 
+
+si se tiene:
+
+apples apples 
+
+expresion regular cambiara a:
+
+apples 
+
+ sed 's/\([a-z]*\) \1/\1 /' fruit
+
+
+ejercicio 16.
+
+echo 1234567 | sed 's/regex_buscar/regex_reemplazo/'
+
+$1,234,567.00
+
+
+echo 1234567 | sed 's/\([0-9]\)\([0-9]\{3\}\)\([0-9]\{3\}\)/$\1,\2,\3.00/'
+
+
+Ejercicio:
+
+echo:"foo(12,34,qwerty)" invertirlo a: foo(qwerty,12,34)
+
+echo 'foo(12,34,qwerty)' | sed 's/foo(\([0-9A-Za-z]*\),\([0-9A-Za-z]*\),\([0-9A-Za-z]*\))/floo(\3,\2,\1)/'
+
+-------------------------------------------------------------
+
+Ejercicio
+
+la mision 
+
+crear las cuentas de usuarios para crear en el sistema.
+
+Las cuentas de usuarios tendran el siguiente formato 
+
+primera letra del primer y segundo nombre
+primer apellido completo 
+primer letra del segundo apellido
+
+
+Todos los usuarios deben estar en minuscula 
+
+sed 's/^\[A-Z]\)[a-z]* \([A-Z]\)[a-z]*\([A-Za-z]*\) \([A-Z]\)[a-z]*/\1\2\3\4/'
+
+sed 's/^\([A-Z]\)[a-z]* \([A-Z]\)[a-z]*\([A-Za-z]*\)\([A-Z]\)[a-z]*/\1\2\3\4/' listado_usuarios.txt | tr 'A-Z' 'a-z '
+
+
+sed 's/^\([A-Z]\)[a-z]* \([A-Z]\)[a-z]*\([A-Za-z]*\)\([A-Z]\)[a-z]*/\1\2\3\4/' listado_usuarios.txt | tr 'A-Z' 'a-z ' | sed 's/^/useradd /'
+
+sed 's/^\([A-Z]\)[a-z]* \([A-Z]\)[a-z]*\([A-Za-z]*\)\([A-Z]\)[a-z]*/\1\2\3\4/' listado_usuarios.txt | tr 'A-Z' 'a-z ' | sed 's/^/ useradd /' | sh
+
