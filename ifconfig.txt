@@ -1,0 +1,2 @@
+[root@frida root]# ifconfig eth0 172.30.10.101 netmask 255.255.255.0 broadcast 172.30.10.255
+[root@frida root]# route add default gw 172.30.10.1
