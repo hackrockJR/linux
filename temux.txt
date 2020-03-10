@@ -1,0 +1,36 @@
+TMUX> 
+
+tmux ya esta instalado en Parrot OS
+
+tmux new -s "Demo"
+
+pwd 
+
+ git clone https://github.com/gpakosz/.tmux.git
+
+cd .tmux/
+
+# Inicar una session 
+
+tmux new-session -d -s "Root"
+
+tmux new -s "Hola"
+
+# Terminar una session tmux 
+
+tmux kill-session -t Root 
+
+# Uso del prefijo
+
+[ctrl][b]
+
+
+# Renombrar ventana 
+
+[ctrl] + [b]
+[,]
+rename> name 
+
+[enter]
+
+
