@@ -3,7 +3,7 @@ TMUX>
 tmux ya esta instalado en Parrot OS
 
 tmux new -s "Demo"
-
+ 
 pwd 
 
  git clone https://github.com/gpakosz/.tmux.git
@@ -32,5 +32,59 @@ tmux kill-session -t Root
 rename> name 
 
 [enter]
+
+# Nueva ventana Horizontal
+
+[ctrl] + [b]
+[shift] + ["]
+
+# Nueva ventana Vertical 
+
+[ctrl] + [b]
+[shift] + [5] 
+
+# Salir de un pane o panel (ventana abierta) 
+
+opcion #1 
+
+exit
+
+opcion # 2
+
+[ctrl]+[b]
+
+[x]
+
+# Dos ventanas abiertas en horizontal cambiar a vertical 
+# o viceverza. 
+
+[ctrl] [b]
+
+[space]
+
+# Mover de posicion el panel A a la posicion panel B 
+
+Opcion # 1
+[ctrl] [b]
+[{]
+
+Opcion # 2
+[ctrl] [b]
+[}]
+
+# Rotar en el sentido de las agujas del reloj
+
+[ctrl] [b]
+[o]
+
+# Nueva ventana de tmux 
+
+[ctrl]+[b]
+[c]
+
+# Cambiar de ventana , se usa el prefijo y el numero de la ventana
+
+[ctrl][b]
+[0]
 
 
