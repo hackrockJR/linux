@@ -1,0 +1,32 @@
+Comando linux ls
+El comando ls es muy útil para ver los archivos y directorios que tenemos dentro del directorio en el que estamos.
+
+Las opciones disponibles con éste comando son las siguientes:
+
+ls -a
+
+Nos muestra los archivos y directorios dentro del directorio actual, incluyendo los archivos y directorios ocultos.
+
+ls -t
+
+Ordena los archivos por fecha de modificación.
+
+ls -X
+
+Ordena los archivos por extensión.
+
+ls -l
+
+Muestra toda la información: usuario, grupo, permisos, tamaño, fecha y hora de creación.
+
+ls -lh
+
+Muestra la misma información que ls -l pero con las unidades de tamaño en KB, MB, etc.
+
+ls -R
+
+Muestra el contenido de todos los subdirectorios de forma recursiva.
+
+ls -S
+
+Ordena los resultados por tamaño de archivo.
