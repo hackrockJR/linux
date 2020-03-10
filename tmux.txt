@@ -1,0 +1,10 @@
+# Listar sessiones tmux >
+
+tmux ls
+
+# Cerrar sessiones tmux >
+
+tmux kill-session -t otherSession
+
+tmux kill-session -t 3
+
