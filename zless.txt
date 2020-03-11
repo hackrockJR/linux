@@ -1,4 +1,4 @@
-
+Zless es un filtro que permite examinar archivos comprimidos o de texto sin formato una pantalla a la vez en un terminal de copia electrónica.
 
 zless smtp-2019-09-13.log.gz | grep "juanperez@dominio.com" > /tmp/logs.txt
 
