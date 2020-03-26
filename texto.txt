@@ -1,0 +1,57 @@
+Archivo comprimido: 
+
+1)
+Descomprimir         | Buscar         | Exportar
+
+zless archivo.log.gz | grep "palabra" > /tmp/exportartexto.txt 
+
+2)
+
+Visualizar            | Buscar             | Exportar
+
+cat -n archivo.log.gz | grep -i "palabra" > /tmp/exportartexto.txt
+
+3)
+
+Otras herramientas 
+
+- NÚMERO DE LINEAS DE UN ARCHIVO
+
+wc -l test.txt
+
+- Si solo queremos mostrar el número le debemos de aplicar un filtro como por ejemplo awk:
+
+wc -l test.txt | awk '{print $1}'
+
+- COMO MOSTRAR LAS PRIMERAS LINEAS DE UN ARCHIVO
+
+head -n 5 test.txt
+
+- COMO MOSTRAR LAS ÚLTIMAS LINEAS DE UN FICHERO
+
+tail -5 test.txt
+
+
+
+4)
+caracteres especiales
+
+- /*Opcion*/
+
+  /*Espacio entre comandos*/ 
+  
+\ /* Quitar la funcion de un caracter */
+
+* /* Busqueda de varios caracteres*/
+
+??? /* Lista los que inice con 3 caracteres */
+
+???* /* Lista los que inicia con 3 o mas caracteres*/
+
+[ ]  /* agrupar busqueda de caracteres*/ 
+
+> Entrada 
+[mn] 
+[a-d]
+
+> Salida
